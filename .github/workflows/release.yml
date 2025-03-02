@@ -41,11 +41,22 @@ jobs:
           - { url: 'https://messenger.com', name: 'Messenger', icon: 'https://static.xx.fbcdn.net/rsrc.php/yO/r/qa11ER6rke_.ico' }
     permissions:
       contents: write
-    uses: rozsazoltan/pake/.github/workflows/pake-cli.yaml@main
-    with:
-      platform: ${{ matrix.platform }}
-      url: ${{ matrix.app.url }}
-      name: ${{ matrix.platform == 'ubuntu-24.04' && lower(matrix.app.name) || matrix.app.name }}
-      icon: ${{ matrix.app.icon }}
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Application Name for Ubuntu
+        run: |
+          APP_NAME="${{ matrix.app.name }}"
+          if [ "${{ matrix.platform }}" == "ubuntu-24.04" ]; then
+            APP_NAME=$(echo "$APP_NAME" | tr '[:upper:]' '[:lower:]')
+          fi
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+
+      - name: Call Pake CLI Workflow
+        uses: rozsazoltan/pake/.github/workflows/pake-cli.yaml@main
+        with:
+          platform: ${{ matrix.platform }}
+          url: ${{ matrix.app.url }}
+          name: ${{ env.APP_NAME }}
+          icon: ${{ matrix.app.icon }}
+        secrets:
+          token: ${{ secrets.GITHUB_TOKEN }}
