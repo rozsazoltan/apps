@@ -1,6 +1,8 @@
 name: Build All Apps
 on:
   push:
+    branches:
+      - none
     tags:
       - 'v*'
 
