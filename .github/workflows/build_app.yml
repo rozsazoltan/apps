@@ -58,3 +58,4 @@ jobs:
       title: ${{ inputs.title }}
       name_zh: ${{ inputs.name_zh }}
       url: ${{ inputs.url }}
+      icon: ${{ inputs.icon }}
