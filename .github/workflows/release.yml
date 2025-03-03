@@ -1,62 +1,35 @@
-name: Create Release
-
+name: Build All Apps
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version number'
-        required: true
-
-permissions:
-  contents: write
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  create-release:
+  read_apps_config:
+    name: Read Apps Config
     runs-on: ubuntu-latest
+    outputs:
+      apps_name: ${{ steps.read-apps-config.outputs.apps_name }}
+      apps_config: ${{ steps.read-apps-config.outputs.apps_config }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      
-      - name: Create Git Tag
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Get Apps Config
+        id: read-apps-config
         run: |
-          git tag ${{ github.event.inputs.version }}
-          git push origin ${{ github.event.inputs.version }}
-      
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.event.inputs.version }}
-          name: ${{ github.event.inputs.version }}
-          body: "Automatically generated version for updating Rust-based desktop installers for web applications."
-          draft: false
-          prerelease: false
+          echo "apps_name=$(jq -c '[.[] | .name]' src/apps.json)" >> $GITHUB_OUTPUT
+          echo "apps_config=$(jq -c '[.[]]' src/apps.json)" >> $GITHUB_OUTPUT
 
-  build-installers:
-    needs: create-release
+  trigger_build:
+    needs: read_apps_config
+    name: ${{ matrix.title }}
     strategy:
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-24.04]
-        app:
-          - { url: 'https://facebook.com', name: 'Facebook', icon: 'https://static.xx.fbcdn.net/rsrc.php/y1/r/ay1hV6OlegS.ico' }
-          - { url: 'https://messenger.com', name: 'Messenger', icon: 'https://static.xx.fbcdn.net/rsrc.php/yO/r/qa11ER6rke_.ico' }
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set Application Name for Ubuntu
-        run: |
-          APP_NAME="${{ matrix.app.name }}"
-          if [ "${{ matrix.platform }}" == "ubuntu-24.04" ]; then
-            APP_NAME=$(echo "$APP_NAME" | tr '[:upper:]' '[:lower:]')
-          fi
-          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
-
-      - name: Call Pake CLI Workflow
-        uses: rozsazoltan/pake/.github/workflows/pake-cli.yaml@main
-        with:
-          platform: ${{ matrix.platform }}
-          url: ${{ matrix.app.url }}
-          name: ${{ env.APP_NAME }}
-          icon: ${{ matrix.app.icon }}
-        secrets:
-          token: ${{ secrets.GITHUB_TOKEN }}
+        name: ${{ fromJson(needs.read_apps_config.outputs.apps_name) }}
+        include: ${{ fromJSON(needs.read_apps_config.outputs.apps_config) }}
+    uses: ./.github/workflows/build_app.yaml
+    with:
+      name: ${{ matrix.name }}
+      title: ${{ matrix.title }}
+      name_zh: ${{ matrix.name_zh }}
+      url: ${{ matrix.url }}

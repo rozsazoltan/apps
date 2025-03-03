@@ -1,0 +1,60 @@
+name: Build Single App
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'App Name'
+        required: true
+        default: 'rozsazoltan'
+      title:
+        description: 'App Title'
+        required: true
+        default: 'RozsaZoltan'
+      name_zh:
+        description: 'App Name in Chinese'
+        required: true
+        default: 'RozsaZoltan'
+      url:
+        description: 'App URL'
+        required: true
+        default: 'https://github.com/rozsazoltan/'
+      icon:
+        description: 'App Icon'
+        required: true
+        default: 'https://github.com/rozsazoltan/apps/blob/master/src/icons/helloworld.png'
+  workflow_call:
+    inputs:
+      name:
+        description: 'App Name'
+        type: 'string'
+        required: true
+        default: 'rozsazoltan'
+      title:
+        description: 'App Title'
+        type: 'string'
+        required: true
+        default: 'RozsaZoltan'
+      name_zh:
+        description: 'App Name in Chinese'
+        type: 'string'
+        required: true
+        default: 'RozsaZoltan'
+      url:
+        description: 'App URL'
+        type: 'string'
+        required: true
+        default: 'https://github.com/rozsazoltan/'
+      icon:
+        description: 'App Icon'
+        type: 'string'
+        required: true
+        default: 'https://github.com/rozsazoltan/apps/blob/master/src/icons/helloworld.png'
+
+jobs:
+  build_single_app:
+    uses: rozsazoltan/pake/.github/workflows/pake_build_single_app.yaml
+    with:
+      name: ${{ inputs.name }}
+      title: ${{ inputs.title }}
+      name_zh: ${{ inputs.name_zh }}
+      url: ${{ inputs.url }}
