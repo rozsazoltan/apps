@@ -55,7 +55,7 @@ on:
 
 jobs:
   build_single_app:
-    uses: rozsazoltan/pake/.github/workflows/pake_build_single_app.yaml
+    uses: rozsazoltan/pake/.github/workflows/pake_build_single_app.yaml@main
     with:
       name: ${{ inputs.name }}
       title: ${{ inputs.title }}
