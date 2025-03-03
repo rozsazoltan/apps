@@ -27,7 +27,7 @@ jobs:
       matrix:
         name: ${{ fromJson(needs.read_apps_config.outputs.apps_name) }}
         include: ${{ fromJSON(needs.read_apps_config.outputs.apps_config) }}
-    uses: rozsazoltan/apps/.github/workflows/build_app.yml
+    uses: ./build_app.yml
     with:
       name: ${{ matrix.name }}
       title: ${{ matrix.title }}
