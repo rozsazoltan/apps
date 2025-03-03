@@ -36,4 +36,3 @@ jobs:
       name_zh: ${{ matrix.name_zh }}
       url: ${{ matrix.url }}
       icon: ${{ matrix.icon }}
-      
