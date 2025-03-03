@@ -29,11 +29,10 @@ jobs:
       matrix:
         name: ${{ fromJson(needs.read_apps_config.outputs.apps_name) }}
         include: ${{ fromJSON(needs.read_apps_config.outputs.apps_config) }}
-    uses: ./build_app.yml
+    uses: ./build_app.yml@master
     with:
       name: ${{ matrix.name }}
       title: ${{ matrix.title }}
       name_zh: ${{ matrix.name_zh }}
       url: ${{ matrix.url }}
       icon: ${{ matrix.icon }}
-      
