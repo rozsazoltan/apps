@@ -12,5 +12,12 @@
     "name_zh": "Messenger",
     "url": "https://messenger.com/",
     "icon": "https://github.com/rozsazoltan/apps/blob/master/src/icons/messenger.png"
+  },
+  {
+    "name": "youtube",
+    "title": "YouTube",
+    "name_zh": "YouTube",
+    "url": "https://www.youtube.com",
+    "icon": "https://github.com/rozsazoltan/apps/blob/master/src/icons/youtube.png"
   }
 ]
