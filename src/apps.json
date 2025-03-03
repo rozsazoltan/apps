@@ -5,5 +5,12 @@
     "name_zh": "Facebook",
     "url": "https://facebook.com/",
     "icon": "https://github.com/rozsazoltan/apps/blob/master/src/icons/facebook.png"
+  },
+  {
+    "name": "messenger",
+    "title": "Messenger",
+    "name_zh": "Messenger",
+    "url": "https://messenger.com/",
+    "icon": "https://github.com/rozsazoltan/apps/blob/master/src/icons/messenger.png"
   }
 ]
